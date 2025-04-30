@@ -1,38 +1,194 @@
-.App {
+/* 전체 컨테이너 */
+.app-container {
+  max-width: 480px;
+  height: 100vh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: #f5f7fa;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+/* 헤더 */
+.step-header {
+  flex: 0 0 auto;
+  margin-bottom: 8px;
+}
+.step-header h3 {
+  font-size: 18px;
+  text-align: center;
+  margin: 0;
+}
+
+/* 본문 (헤더 고정, 본문만 스크롤) */
+.step-body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* 1,3단계 버튼 그룹 */
+.btn-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.btn-group button {
+  flex: 1;
+  padding: 8px;
+  font-size: 14px;
+  background: #fff;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+.btn-group button.active {
+  background: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
+
+/* 풀 너비 입력 */
+.full-width-input {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* 2단계 방 개수 선택 */
+.room-count-selector {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.room-count-selector button {
+  padding: 6px 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  background: #fff;
+  cursor: pointer;
+}
+.room-count-selector button.active {
+  background: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
+
+/* 2단계 방 이름 */
+.room-names {
+  margin-bottom: 12px;
+}
+.room-name-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.room-name-row label {
+  width: 50px;
+}
+.room-name-row input {
+  flex: 1;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* 4단계 엑셀헤더 */
+.excel-header {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 4px;
+}
+.excel-header input[type="file"] {
+  padding: 4px;
+}
+.excel-header .total {
+  margin-left: auto;
+  font-size: 14px;
+}
+
+/* 참가자 테이블 (본문만 스크롤) */
+.participant-table {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* 각 행 */
+.participant-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  border-bottom: 1px solid #eee;
+}
+
+/* 헤더 행 고정 */
+.participant-row.header {
+  background: #fafafa;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* 셀 너비 */
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cell.group { flex: 0 0 50px; }
+.cell.nickname { flex: 1;       }
+.cell.handicap { flex: 0 0 60px; }
+.cell.delete { flex: 0 0 30px;  }
+
+/* 입력/선택 박스 */
+.participant-row select,
+.participant-row input[type="text"],
+.participant-row input[type="number"] {
+  width: 100%;
+  padding: 4px;
+  font-size: 14px;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* 푸터 */
+.step-footer {
+  flex: 0 0 auto;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  gap: 8px;
+  margin-top: 8px;
+}
+.step-footer button {
+  flex: 1;
+  padding: 8px 0;
+  font-size: 14px;
+  background: #fff;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+.step-footer button:disabled {
+  background: #eee;
+  cursor: not-allowed;
 }
 
-.App-link {
-  color: #61dafb;
+/* 4단계 헤더의 '삭제' 셀: 한 줄로, 글자 크기 축소 */
+.participant-row.header .cell.delete {
+  white-space: nowrap;     /* 줄 바꿈 금지 */
+  font-size: 12px;         /* 필요에 따라 조정 */
+  line-height: 1;          /* 높이 딱 맞춤 */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* 대회 제목 입력란: 모든 방향 테두리 강제 적용 */
+.step input[type="text"] {
+  border-right: 1px solid #ccc !important;
 }
