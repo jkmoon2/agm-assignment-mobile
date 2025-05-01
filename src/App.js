@@ -1,3 +1,4 @@
+// src/App.js
 import React, { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
 import "./App.css";
@@ -21,7 +22,7 @@ function App() {
   // 4단계
   const [participants, setParticipants] = useState([]);
 
-  // 방 개수 변경 시 roomNames 길이 동기화
+  // 방 개수 변경 시 roomNames 길이 동기화 + 참가자 슬롯 초기화
   useEffect(() => {
     setRoomNames((prev) => {
       const next = prev.slice(0, roomCount);
@@ -30,7 +31,6 @@ function App() {
       }
       return next;
     });
-    // 4단계 참가자 슬롯도 갱신
     setParticipants(
       Array.from({ length: roomCount * 4 }, (_, i) => ({
         group: Math.floor(i / 4) + 1,
@@ -134,12 +134,6 @@ function App() {
               type="text"
               className="full-width-input"
               placeholder="대회 제목을 입력하세요"
-              style={{
-                border: '1px solid #ccc',
-                boxSizing: 'border-box',
-                padding: '8px',
-                width: '100%',
-              }}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
@@ -150,7 +144,10 @@ function App() {
         {step === 2 && (
           <>
             <div className="room-count-selector">
-              {[3, 4, 5, 6, 7].map((n) => (
+              <button onClick={() => setRoomCount((c) => Math.max(1, c - 1))}>
+                –
+              </button>
+              {[3, 4, 5, 6, 7, 8].map((n) => (
                 <button
                   key={n}
                   className={roomCount === n ? "active" : ""}
@@ -159,10 +156,7 @@ function App() {
                   {n}개
                 </button>
               ))}
-              <button onClick={() => setRoomCount((c) => Math.max(1, c - 1))}>
-                –
-              </button>
-              <button onClick={() => setRoomCount((c) => c + 1)}>+</button>
+              <button onClick={() => setRoomCount((c) => c + 1)}>＋</button>
             </div>
             <div className="room-names">
               {roomNames.map((name, i) => (
@@ -217,9 +211,7 @@ function App() {
                   onChange={handleFile}
                 />
               )}
-              <span className="total">
-                총 슬롯: {participants.length}명
-              </span>
+              <span className="total">총 슬롯: {participants.length}명</span>
             </div>
             <div className="participant-table">
               {/* 헤더 */}
@@ -287,14 +279,9 @@ function App() {
 
       {/* 푸터 */}
       <div className="step-footer">
-        {step > 1 && (
-          <button onClick={() => setStep(step - 1)}>← 이전</button>
-        )}
+        {step > 1 && <button onClick={() => setStep(step - 1)}>← 이전</button>}
         {step < 4 && (
-          <button
-            onClick={() => setStep(step + 1)}
-            disabled={step === 1 && !title}
-          >
+          <button onClick={() => setStep(step + 1)} disabled={step === 1 && !title}>
             다음 →
           </button>
         )}
@@ -302,7 +289,7 @@ function App() {
           <>
             <button onClick={addParticipant}>추가</button>
             <button onClick={delSelected}>삭제</button>
-            <button onClick={() => setStep(step + 1)}>다음 →</button>
+            <button onClick={() => setStep(5)}>다음 →</button>
           </>
         )}
       </div>

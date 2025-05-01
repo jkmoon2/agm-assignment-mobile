@@ -1,3 +1,5 @@
+/* src/App.css */
+
 /* 전체 컨테이너 */
 .app-container {
   max-width: 480px;
@@ -49,7 +51,7 @@
   border-color: #007bff;
 }
 
-/* 풀 너비 입력 */
+/* 대회명 입력: 전체 테두리 focus 적용 */
 .full-width-input {
   width: 100%;
   padding: 8px;
@@ -57,6 +59,11 @@
   margin-bottom: 12px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  box-sizing: border-box;
+}
+.full-width-input:focus {
+  outline: none;
+  border: 2px solid #007bff;
 }
 
 /* 2단계 방 개수 선택 */
@@ -79,7 +86,7 @@
   border-color: #007bff;
 }
 
-/* 2단계 방 이름 */
+/* 2단계 방 이름 입력 */
 .room-names {
   margin-bottom: 12px;
 }
@@ -98,7 +105,7 @@
   border-radius: 4px;
 }
 
-/* 4단계 엑셀헤더 */
+/* 4단계 엑셀 헤더 */
 .excel-header {
   flex: 0 0 auto;
   display: flex;
@@ -114,6 +121,7 @@
 .excel-header .total {
   margin-left: auto;
   font-size: 14px;
+  white-space: nowrap;   /* 한 줄로 고정 */
 }
 
 /* 참가자 테이블 (본문만 스크롤) */
@@ -147,9 +155,9 @@
   justify-content: center;
 }
 .cell.group { flex: 0 0 50px; }
-.cell.nickname { flex: 1;       }
+.cell.nickname { flex: 1; }
 .cell.handicap { flex: 0 0 60px; }
-.cell.delete { flex: 0 0 30px;  }
+.cell.delete { flex: 0 0 30px; }
 
 /* 입력/선택 박스 */
 .participant-row select,
@@ -181,14 +189,9 @@
   cursor: not-allowed;
 }
 
-/* 4단계 헤더의 '삭제' 셀: 한 줄로, 글자 크기 축소 */
+/* “삭제” 헤더 줄바꿈 방지 */
 .participant-row.header .cell.delete {
-  white-space: nowrap;     /* 줄 바꿈 금지 */
-  font-size: 12px;         /* 필요에 따라 조정 */
-  line-height: 1;          /* 높이 딱 맞춤 */
-}
-
-/* 대회 제목 입력란: 모든 방향 테두리 강제 적용 */
-.step input[type="text"] {
-  border-right: 1px solid #ccc !important;
+  white-space: nowrap;
+  font-size: 12px;
+  line-height: 1;
 }
