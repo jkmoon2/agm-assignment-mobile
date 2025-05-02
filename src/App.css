@@ -114,8 +114,11 @@
   padding-bottom: 4px;
   border-bottom: 1px solid #ddd;
   margin-bottom: 4px;
+  justify-content: space-between;
 }
 .excel-header input[type="file"] {
+  max-width: 60%;
+  flex-shrink: 0;
   padding: 4px;
 }
 .excel-header .total {
