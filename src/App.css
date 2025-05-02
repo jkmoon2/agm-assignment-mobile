@@ -1,5 +1,3 @@
-/* src/App.css */
-
 /* 전체 컨테이너 */
 .app-container {
   max-width: 480px;
@@ -23,7 +21,7 @@
   margin: 0;
 }
 
-/* 본문 (헤더 고정, 본문만 스크롤) */
+/* 본문 (스크롤) */
 .step-body {
   flex: 1 1 auto;
   display: flex;
@@ -51,7 +49,7 @@
   border-color: #007bff;
 }
 
-/* 대회명 입력 */
+/* 1단계 입력 */
 .full-width-input {
   width: 100%;
   padding: 8px;
@@ -66,15 +64,17 @@
   border: 2px solid #007bff;
 }
 
-/* 2단계 방 개수 선택 */
+/* 2단계 */
 .room-count-selector {
   display: flex;
   gap: 8px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
   margin-bottom: 12px;
 }
 .room-count-selector button {
-  flex: 1;            /* 좌/우 동일 크기 유지 */
-  padding: 6px 0;     /* 높이만 지정 */
+  flex: 0 0 auto;
+  padding: 6px 12px;
   font-size: 14px;
   border: 1px solid #ccc;
   background: #fff;
@@ -86,7 +86,7 @@
   border-color: #007bff;
 }
 
-/* 2단계 방 이름 입력 */
+/* 2단계 방 이름 */
 .room-names {
   margin-bottom: 12px;
 }
@@ -114,11 +114,8 @@
   padding-bottom: 4px;
   border-bottom: 1px solid #ddd;
   margin-bottom: 4px;
-  justify-content: space-between;
 }
 .excel-header input[type="file"] {
-  max-width: 60%;
-  flex-shrink: 0;
   padding: 4px;
 }
 .excel-header .total {
@@ -132,8 +129,6 @@
   flex: 1;
   overflow-y: auto;
 }
-
-/* 각 행 */
 .participant-row {
   display: flex;
   align-items: center;
@@ -148,8 +143,6 @@
   top: 0;
   z-index: 1;
 }
-
-/* 셀 너비 */
 .cell {
   display: flex;
   align-items: center;
@@ -159,8 +152,6 @@
 .cell.nickname { flex: 1; }
 .cell.handicap { flex: 0 0 60px; }
 .cell.delete { flex: 0 0 30px; }
-
-/* 입력 박스 */
 .participant-row select,
 .participant-row input[type="text"],
 .participant-row input[type="number"] {
@@ -168,6 +159,33 @@
   padding: 4px;
   font-size: 14px;
   text-align: center;
+}
+
+/* 5단계 결과 */
+.result-body {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 12px;
+}
+.room-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px;
+  margin-bottom: 8px;
+}
+.room-card h4 {
+  margin: 0 0 4px;
+  font-size: 16px;
+}
+.room-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.room-card li {
+  padding: 2px 0;
+  font-size: 14px;
 }
 
 /* 푸터 */
@@ -190,9 +208,25 @@
   cursor: not-allowed;
 }
 
-/* “삭제” 헤더 줄바꿈 방지 */
-.participant-row.header .cell.delete {
-  white-space: nowrap;
-  font-size: 12px;
-  line-height: 1;
+.mode-select-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 100vh;
+}
+
+.mode-btn {
+  flex: 1;
+  margin: 0 16px;
+  padding: 16px;
+  font-size: 18px;
+  background: #fff;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.mode-btn:hover {
+  background: #e6f0ff;
 }
