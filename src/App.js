@@ -22,15 +22,15 @@ function App() {
   // 4단계
   const [participants, setParticipants] = useState([]);
 
-  // 방 개수 변경 시 roomNames 길이 동기화 + 참가자 슬롯 초기화
+  // 방 개수 변경 시
   useEffect(() => {
+    // 방 이름 동기화
     setRoomNames((prev) => {
       const next = prev.slice(0, roomCount);
-      while (next.length < roomCount) {
-        next.push(`${next.length + 1}조`);
-      }
+      while (next.length < roomCount) next.push(`${next.length + 1}조`);
       return next;
     });
+    // 슬롯 초기화
     setParticipants(
       Array.from({ length: roomCount * 4 }, (_, i) => ({
         group: Math.floor(i / 4) + 1,
@@ -41,7 +41,7 @@ function App() {
     );
   }, [roomCount]);
 
-  // 엑셀 업로드 핸들러 (4단계 자동)
+  // 엑셀 읽기
   const handleFile = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -78,14 +78,14 @@ function App() {
     );
   };
 
-  // 체크 토글
+  // 선택 토글
   const toggleSelect = (i) => {
     const c = [...participants];
     c[i].selected = !c[i].selected;
     setParticipants(c);
   };
 
-  // 추가 / 선택 삭제
+  // 추가/삭제
   const addParticipant = () =>
     setParticipants((p) => [
       ...p,
@@ -180,9 +180,7 @@ function App() {
           <div className="btn-group">
             <button
               className={uploadMethod === "auto" ? "active" : ""}
-              onClick={() => {
-                setUploadMethod("auto");
-              }}
+              onClick={() => setUploadMethod("auto")}
             >
               자동(엑셀) 업로드
             </button>
@@ -205,9 +203,8 @@ function App() {
               {uploadMethod === "auto" && (
                 <input type="file" accept=".xlsx,.xls" onChange={handleFile} />
               )}
-              <span className="total">
-                총 슬롯: {(participants.length || 0)}명
-              </span>
+              {/* 항상 roomCount*4명 표시 */}
+              <span className="total">총 슬롯: {roomCount * 4}명</span>
             </div>
             <div className="participant-table">
               {/* 헤더 */}
