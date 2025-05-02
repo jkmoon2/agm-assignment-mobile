@@ -70,13 +70,11 @@
 .room-count-selector {
   display: flex;
   gap: 8px;
-  /* flex-wrap: nowrap;  기본값 */
-  /* overflow-x 제거 */
   margin-bottom: 12px;
 }
 .room-count-selector button {
-  flex: 1;           /* 모두 같은 크기 */
-  padding: 6px 0;    /* 좌우 패딩 제거해 균일하게 */
+  flex: 1;            /* 좌/우 동일 크기 유지 */
+  padding: 6px 0;     /* 높이만 지정 */
   font-size: 14px;
   border: 1px solid #ccc;
   background: #fff;
