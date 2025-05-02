@@ -86,15 +86,13 @@ function App() {
   };
 
   // 추가 / 선택 삭제
-  const addParticipant = () => {
+  const addParticipant = () =>
     setParticipants((p) => [
       ...p,
       { group: 1, nickname: "", handicap: 0, selected: false },
     ]);
-  };
-  const delSelected = () => {
+  const delSelected = () =>
     setParticipants((p) => p.filter((x) => !x.selected));
-  };
 
   return (
     <div className="app-container">
@@ -205,13 +203,11 @@ function App() {
           <>
             <div className="excel-header">
               {uploadMethod === "auto" && (
-                <input
-                  type="file"
-                  accept=".xlsx,.xls"
-                  onChange={handleFile}
-                />
+                <input type="file" accept=".xlsx,.xls" onChange={handleFile} />
               )}
-              <span className="total">총 슬롯: {participants.length}명</span>
+              <span className="total">
+                총 슬롯: {(participants.length || 0)}명
+              </span>
             </div>
             <div className="participant-table">
               {/* 헤더 */}
@@ -281,7 +277,10 @@ function App() {
       <div className="step-footer">
         {step > 1 && <button onClick={() => setStep(step - 1)}>← 이전</button>}
         {step < 4 && (
-          <button onClick={() => setStep(step + 1)} disabled={step === 1 && !title}>
+          <button
+            onClick={() => setStep(step + 1)}
+            disabled={step === 1 && !title}
+          >
             다음 →
           </button>
         )}

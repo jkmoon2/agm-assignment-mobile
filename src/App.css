@@ -70,10 +70,12 @@
 .room-count-selector {
   display: flex;
   gap: 8px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;       /* 한 줄에 고정 */
+  overflow-x: auto;        /* 넘치면 스크롤 */
   margin-bottom: 12px;
 }
 .room-count-selector button {
+  flex: 0 0 auto;
   padding: 6px 8px;
   font-size: 14px;
   border: 1px solid #ccc;
@@ -121,7 +123,7 @@
 .excel-header .total {
   margin-left: auto;
   font-size: 14px;
-  white-space: nowrap;   /* 한 줄로 고정 */
+  white-space: nowrap; /* 항상 한 줄 */
 }
 
 /* 참가자 테이블 (본문만 스크롤) */
@@ -138,7 +140,6 @@
   padding: 4px 0;
   border-bottom: 1px solid #eee;
 }
-
 /* 헤더 행 고정 */
 .participant-row.header {
   background: #fafafa;
