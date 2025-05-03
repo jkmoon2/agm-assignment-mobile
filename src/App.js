@@ -1,8 +1,13 @@
-
 // src/App.js
 import React, { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
 import "./App.css";
+
+// 5~8단계 컴포넌트 import
+import Step5_StrokeAssign from "./components/Step5_StrokeAssign";
+import Step6_StrokeResult   from "./components/Step6_StrokeResult";
+import Step7_AGMAssign      from "./components/Step7_AGMAssign";
+import Step8_AGMResult      from "./components/Step8_AGMResult";
 
 function App() {
   const [step, setStep] = useState(1);
@@ -108,6 +113,10 @@ function App() {
             2: "방 개수 및 방 이름 설정",
             3: "업로드 방식 선택",
             4: "참가자 데이터 입력",
+            5: "스트로크 방 배정",
+            6: "스트로크 결과 확인",
+            7: "AGM 포볼 방 배정",
+            8: "AGM 포볼 결과 확인",
           }[step]}
         </h3>
       </div>
@@ -212,7 +221,6 @@ function App() {
                   onChange={handleFile}
                 />
               )}
-              {/* ★ 이 부분만 participants.length → roomCount*4 로 변경 ★ */}
               <span className="total">총 슬롯: {roomCount * 4}명</span>
             </div>
             <div className="participant-table">
@@ -277,21 +285,58 @@ function App() {
             </div>
           </>
         )}
+
+        {/* 5~8단계: 외부 컴포넌트 렌더링 */}
+        {step === 5 && (
+          <Step5_StrokeAssign
+            roomCount={roomCount}
+            roomNames={roomNames}
+            participants={participants}
+            setParticipants={setParticipants}
+          />
+        )}
+        {step === 6 && (
+          <Step6_StrokeResult
+            roomCount={roomCount}
+            roomNames={roomNames}
+            participants={participants}
+          />
+        )}
+        {step === 7 && (
+          <Step7_AGMAssign
+            roomCount={roomCount}
+            roomNames={roomNames}
+            participants={participants}
+          />
+        )}
+        {step === 8 && (
+          <Step8_AGMResult
+            roomCount={roomCount}
+            roomNames={roomNames}
+            participants={participants}
+          />
+        )}
       </div>
 
       {/* 푸터 */}
       <div className="step-footer">
         {step > 1 && <button onClick={() => setStep(step - 1)}>← 이전</button>}
-        {step < 4 && (
-          <button onClick={() => setStep(step + 1)} disabled={step === 1 && !title}>
+
+        {/* 4단계 이상, 8단계 미만일 때만 다음 버튼 */}
+        {step < 8 && (
+          <button
+            onClick={() => setStep(step + 1)}
+            disabled={step === 1 && !title}
+          >
             다음 →
           </button>
         )}
+
+        {/* 4단계에서는 추가/삭제 버튼만 */}
         {step === 4 && (
           <>
             <button onClick={addParticipant}>추가</button>
             <button onClick={delSelected}>삭제</button>
-            <button onClick={() => setStep(5)}>다음 →</button>
           </>
         )}
       </div>

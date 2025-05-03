@@ -1,4 +1,4 @@
-// ex) src/components/Step1_Mode.js
+// src/components/Step1_Mode.js
 import React from 'react';
 export default function Step1_Mode({ mode, setMode, title, setTitle, onNext }) {
   return (
