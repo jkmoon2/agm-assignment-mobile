@@ -1,42 +1,48 @@
-// src/App.js
 import React, { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
+
+import Step1ModeTitle    from "./components/Step1ModeTitle";
+import Step2RoomSetup    from "./components/Step2RoomSetup";
+import Step3UploadType   from "./components/Step3UploadType";
+import Step4Participant  from "./components/Step4Participant";
+import Step5StrokeAssign from "./components/Step5StrokeAssign";
+import Step6StrokeResult from "./components/Step6StrokeResult";
+import Step7AGMAssign    from "./components/Step7AGMAssign";
+import Step8AGMResult    from "./components/Step8AGMResult";
+
 import "./App.css";
 
-// 5~8단계 컴포넌트 import
-import Step5_StrokeAssign from "./components/Step5_StrokeAssign";
-import Step6_StrokeResult   from "./components/Step6_StrokeResult";
-import Step7_AGMAssign      from "./components/Step7_AGMAssign";
-import Step8_AGMResult      from "./components/Step8_AGMResult";
-
 function App() {
-  const [step, setStep] = useState(1);
+  // ─── 공통 상태 ───
+  const [step, setStep]     = useState(1);
+  const [mode, setMode]     = useState("stroke"); // "stroke" or "agm"
+  const [title, setTitle]   = useState("");
 
-  // 1단계
-  const [mode, setMode] = useState("stroke");
-  const [title, setTitle] = useState("");
-
-  // 2단계
+  // ─── 2단계: 방 개수 & 이름 ───
   const [roomCount, setRoomCount] = useState(4);
   const [roomNames, setRoomNames] = useState(
     Array.from({ length: 4 }, (_, i) => `${i + 1}조`)
   );
 
-  // 3단계
+  // ─── 3/4단계: 업로드 방식 & 참가자 ───
   const [uploadMethod, setUploadMethod] = useState("");
-
-  // 4단계
   const [participants, setParticipants] = useState([]);
 
-  // 방 개수 변경 시 roomNames 길이 동기화 + 참가자 슬롯 초기화
+  // ─── 5/6단계: 스트로크 배정 결과 ───
+  const [strokeAssigned, setStrokeAssigned] = useState({});
+
+  // ─── 7/8단계: AGM 포볼 배정 결과 & 스코어 ───
+  const [agmAssigned, setAgmAssigned] = useState({});
+  const [scores, setScores] = useState({});
+
+  // → 방 개수 바뀔 때마다 참가자 슬롯 & 배정 결과 초기화
   useEffect(() => {
-    setRoomNames((prev) => {
+    setRoomNames(prev => {
       const next = prev.slice(0, roomCount);
-      while (next.length < roomCount) {
-        next.push(`${next.length + 1}조`);
-      }
+      while (next.length < roomCount) next.push(`${next.length + 1}조`);
       return next;
     });
+
     setParticipants(
       Array.from({ length: roomCount * 4 }, (_, i) => ({
         group: Math.floor(i / 4) + 1,
@@ -45,34 +51,38 @@ function App() {
         selected: false,
       }))
     );
+    setStrokeAssigned({});
+    setAgmAssigned({});
+    setScores({});
   }, [roomCount]);
 
-  // 엑셀 업로드 핸들러 (4단계 자동)
-  const handleFile = (e) => {
+  // ─── 4단계: 엑셀 업로드 핸들러 ───
+  const handleFile = e => {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (ev) => {
+    reader.onload = ev => {
       const wb = XLSX.read(ev.target.result, { type: "binary" });
       const ws = wb.Sheets[wb.SheetNames[0]];
       const json = XLSX.utils.sheet_to_json(ws);
       const list = json
-        .map((r) => ({
+        .map(r => ({
           group: r.조,
           nickname: r.닉네임,
           handicap: r["G핸디"],
           selected: false,
         }))
         .slice(0, roomCount * 4);
-      while (list.length < roomCount * 4) {
+      while (list.length < roomCount * 4)
         list.push({ group: 1, nickname: "", handicap: 0, selected: false });
-      }
       setParticipants(list);
+      setStrokeAssigned({});
+      setAgmAssigned({});
+      setScores({});
     };
     reader.readAsBinaryString(file);
   };
-
-  // 수동 초기화
+  // 수동 입력 진입 시 완전 초기화
   const initManual = () => {
     setParticipants(
       Array.from({ length: roomCount * 4 }, (_, i) => ({
@@ -82,264 +92,198 @@ function App() {
         selected: false,
       }))
     );
+    setStrokeAssigned({});
+    setAgmAssigned({});
+    setScores({});
   };
 
-  // 체크 토글
-  const toggleSelect = (i) => {
-    const c = [...participants];
-    c[i].selected = !c[i].selected;
-    setParticipants(c);
+  // ─── 5단계: 스트로크 개별 배정 ───
+  const assignOneStroke = idx => {
+    const user = participants[idx];
+    if (!user.nickname) return;
+    const available = [];
+    for (let i = 0; i < roomCount; i++) {
+      const arr = strokeAssigned[i] || [];
+      if (!arr.find(p => p.group === user.group)) available.push(i);
+    }
+    if (!available.length) return;
+    const r = available[Math.floor(Math.random() * available.length)];
+    setStrokeAssigned(prev => {
+      const nxt = { ...prev };
+      nxt[r] = [...(nxt[r] || []), user];
+      return nxt;
+    });
+  };
+  // ─── 5단계 자동 배정 ───
+  const autoAssignStroke = () => {
+    const grouped = {};
+    participants.forEach(p => {
+      if (!p.nickname) return;
+      (grouped[p.group] ||= []).push(p);
+    });
+    const newRooms = {};
+    for (let i = 0; i < roomCount; i++) newRooms[i] = [];
+    Object.values(grouped).forEach(arr => {
+      const shuffled = [...arr].sort(() => Math.random() - 0.5);
+      let ri = 0;
+      shuffled.forEach(p => {
+        while (newRooms[ri].find(q => q.group === p.group)) ri++;
+        if (ri < roomCount) newRooms[ri].push(p);
+      });
+    });
+    setStrokeAssigned(newRooms);
+  };
+  const clearStroke = () => setStrokeAssigned({});
+
+  // ─── 6단계 완료 ───
+  const finish = () => {
+    alert("완료되었습니다!");
+    setStep(1);
   };
 
-  // 추가 / 선택 삭제
-  const addParticipant = () => {
-    setParticipants((p) => [
-      ...p,
-      { group: 1, nickname: "", handicap: 0, selected: false },
-    ]);
+  // ─── 7단계: AGM 방 선택/팀 선택 ───
+  const selectAgmRoom = idx => {
+    const user = participants[idx];
+    if (user.group !== 1) return;
+    const available = [];
+    for (let i = 0; i < roomCount; i++) {
+      const arr = agmAssigned[i] || [];
+      if (arr.length < 4) available.push(i);
+    }
+    if (!available.length) return;
+    const r = available[Math.floor(Math.random() * available.length)];
+    setAgmAssigned(prev => {
+      const nxt = { ...prev };
+      nxt[r] = [...(nxt[r] || []), user];
+      return nxt;
+    });
   };
-  const delSelected = () => {
-    setParticipants((p) => p.filter((x) => !x.selected));
+  const selectAgmTeam = idx => {
+    const user1 = participants[idx];
+    if (user1.group !== 1) return;
+    let roomIdx = -1;
+    Object.entries(agmAssigned).forEach(([k, arr]) => {
+      if (arr.find(p => p.nickname === user1.nickname)) roomIdx = +k;
+    });
+    if (roomIdx < 0) return;
+    const pool = participants.filter(
+      p => p.group === 2 &&
+        !Object.values(agmAssigned).flat().find(q => q.nickname === p.nickname)
+    );
+    if (!pool.length) return;
+    const pick = pool[Math.floor(Math.random() * pool.length)];
+    setAgmAssigned(prev => {
+      const nxt = { ...prev };
+      nxt[roomIdx] = [...(nxt[roomIdx] || []), pick];
+      return nxt;
+    });
   };
+  const autoAssignAgm = () => {
+    const g1 = participants.filter(p => p.group === 1);
+    const g2 = participants.filter(p => p.group === 2);
+    const cnt = Math.min(g1.length, g2.length);
+    const sh1 = [...g1].sort(() => Math.random()-0.5).slice(0, cnt);
+    const sh2 = [...g2].sort(() => Math.random()-0.5).slice(0, cnt);
+    const nxt = {};
+    for (let i=0;i<roomCount;i++) nxt[i]=[];
+    let pi=0;
+    for (let r=0;r<roomCount;r++){
+      while(nxt[r].length<4 && pi<cnt){
+        nxt[r].push(sh1[pi], sh2[pi]);
+        pi++;
+      }
+    }
+    setAgmAssigned(nxt);
+  };
+  const clearAgm = () => setAgmAssigned({});
 
   return (
     <div className="app-container">
-      {/* 헤더 */}
-      <div className="step-header">
-        <h3>
-          {step}.{" "}
-          {{
-            1: "모드 선택 및 대회 제목 입력",
-            2: "방 개수 및 방 이름 설정",
-            3: "업로드 방식 선택",
-            4: "참가자 데이터 입력",
-            5: "스트로크 방 배정",
-            6: "스트로크 결과 확인",
-            7: "AGM 포볼 방 배정",
-            8: "AGM 포볼 결과 확인",
-          }[step]}
-        </h3>
-      </div>
+      {step===1 && (
+        <Step1ModeTitle
+          step={step} setStep={setStep}
+          mode={mode} setMode={setMode}
+          title={title} setTitle={setTitle}
+        />
+      )}
 
-      {/* 본문 */}
-      <div className="step-body">
-        {/* 1단계 */}
-        {step === 1 && (
-          <>
-            <div className="btn-group">
-              <button
-                className={mode === "stroke" ? "active" : ""}
-                onClick={() => setMode("stroke")}
-              >
-                스트로크 모드
-              </button>
-              <button
-                className={mode === "agm" ? "active" : ""}
-                onClick={() => setMode("agm")}
-              >
-                AGM 포볼 모드
-              </button>
-            </div>
-            <input
-              type="text"
-              className="full-width-input"
-              placeholder="대회 제목을 입력하세요"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-          </>
-        )}
+      {step===2 && (
+        <Step2RoomSetup
+          step={step} setStep={setStep}
+          roomCount={roomCount} setRoomCount={setRoomCount}
+          roomNames={roomNames} setRoomNames={setRoomNames}
+        />
+      )}
 
-        {/* 2단계 */}
-        {step === 2 && (
-          <>
-            <div className="room-count-selector">
-              <button onClick={() => setRoomCount((c) => Math.max(1, c - 1))}>
-                –
-              </button>
-              {[3, 4, 5, 6, 7, 8].map((n) => (
-                <button
-                  key={n}
-                  className={roomCount === n ? "active" : ""}
-                  onClick={() => setRoomCount(n)}
-                >
-                  {n}개
-                </button>
-              ))}
-              <button onClick={() => setRoomCount((c) => c + 1)}>＋</button>
-            </div>
-            <div className="room-names">
-              {roomNames.map((name, i) => (
-                <div key={i} className="room-name-row">
-                  <label>방 {i + 1}:</label>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => {
-                      const rn = [...roomNames];
-                      rn[i] = e.target.value;
-                      setRoomNames(rn);
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
-          </>
-        )}
+      {step===3 && (
+        <Step3UploadType
+          step={step} setStep={setStep}
+          uploadMethod={uploadMethod}
+          setUploadMethod={m=>{
+            setUploadMethod(m);
+            if(m==="manual") initManual();
+          }}
+          initManual={initManual}
+        />
+      )}
 
-        {/* 3단계 */}
-        {step === 3 && (
-          <div className="btn-group">
-            <button
-              className={uploadMethod === "auto" ? "active" : ""}
-              onClick={() => {
-                setUploadMethod("auto");
-              }}
-            >
-              자동(엑셀) 업로드
-            </button>
-            <button
-              className={uploadMethod === "manual" ? "active" : ""}
-              onClick={() => {
-                setUploadMethod("manual");
-                initManual();
-              }}
-            >
-              수동(직접 입력)
-            </button>
-          </div>
-        )}
+{step===4 && (
+        <Step4Participant
+          step={step}
+          setStep={setStep}
+          mode={mode}                      // ← 추가
+          uploadMethod={uploadMethod}
+          participants={participants}
+          setParticipants={setParticipants}
+          roomCount={roomCount}
+          roomNames={roomNames}
+          handleFile={handleFile}
+        />
+      )}
 
-        {/* 4단계 */}
-        {step === 4 && (
-          <>
-            <div className="excel-header">
-              {uploadMethod === "auto" && (
-                <input
-                  type="file"
-                  accept=".xlsx,.xls"
-                  onChange={handleFile}
-                />
-              )}
-              <span className="total">총 슬롯: {roomCount * 4}명</span>
-            </div>
-            <div className="participant-table">
-              {/* 헤더 */}
-              <div className="participant-row header">
-                <div className="cell group">조</div>
-                <div className="cell nickname">닉네임</div>
-                <div className="cell handicap">G핸디</div>
-                <div className="cell delete">삭제</div>
-              </div>
-              {/* 리스트 */}
-              {participants.map((p, i) => (
-                <div key={i} className="participant-row">
-                  <div className="cell group">
-                    <select
-                      value={p.group}
-                      onChange={(e) => {
-                        const c = [...participants];
-                        c[i].group = Number(e.target.value);
-                        setParticipants(c);
-                      }}
-                    >
-                      {roomNames.map((_, idx) => (
-                        <option key={idx} value={idx + 1}>
-                          {idx + 1}조
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="cell nickname">
-                    <input
-                      type="text"
-                      placeholder="닉네임"
-                      value={p.nickname}
-                      onChange={(e) => {
-                        const c = [...participants];
-                        c[i].nickname = e.target.value;
-                        setParticipants(c);
-                      }}
-                    />
-                  </div>
-                  <div className="cell handicap">
-                    <input
-                      type="number"
-                      value={p.handicap}
-                      onChange={(e) => {
-                        const c = [...participants];
-                        c[i].handicap = Number(e.target.value);
-                        setParticipants(c);
-                      }}
-                    />
-                  </div>
-                  <div className="cell delete">
-                    <input
-                      type="checkbox"
-                      checked={p.selected}
-                      onChange={() => toggleSelect(i)}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
+      {mode==="stroke" && step===5 && (
+        <Step5StrokeAssign
+          participants={participants}
+          roomCount={roomCount}
+          roomNames={roomNames}
+          onAssignOne={assignOneStroke}
+          onAutoAssign={autoAssignStroke}
+          onClearStroke={clearStroke}
+          onPrev={()=>setStep(4)}
+          onNext={()=>setStep(6)}
+        />
+      )}
+      {mode==="stroke" && step===6 && (
+        <Step6StrokeResult
+          assigned={strokeAssigned}
+          roomNames={roomNames}
+          onPrev={()=>setStep(5)}
+          onDone={finish}
+        />
+      )}
 
-        {/* 5~8단계: 외부 컴포넌트 렌더링 */}
-        {step === 5 && (
-          <Step5_StrokeAssign
-            roomCount={roomCount}
-            roomNames={roomNames}
-            participants={participants}
-            setParticipants={setParticipants}
-          />
-        )}
-        {step === 6 && (
-          <Step6_StrokeResult
-            roomCount={roomCount}
-            roomNames={roomNames}
-            participants={participants}
-          />
-        )}
-        {step === 7 && (
-          <Step7_AGMAssign
-            roomCount={roomCount}
-            roomNames={roomNames}
-            participants={participants}
-          />
-        )}
-        {step === 8 && (
-          <Step8_AGMResult
-            roomCount={roomCount}
-            roomNames={roomNames}
-            participants={participants}
-          />
-        )}
-      </div>
-
-      {/* 푸터 */}
-      <div className="step-footer">
-        {step > 1 && <button onClick={() => setStep(step - 1)}>← 이전</button>}
-
-        {/* 4단계 이상, 8단계 미만일 때만 다음 버튼 */}
-        {step < 8 && (
-          <button
-            onClick={() => setStep(step + 1)}
-            disabled={step === 1 && !title}
-          >
-            다음 →
-          </button>
-        )}
-
-        {/* 4단계에서는 추가/삭제 버튼만 */}
-        {step === 4 && (
-          <>
-            <button onClick={addParticipant}>추가</button>
-            <button onClick={delSelected}>삭제</button>
-          </>
-        )}
-      </div>
+      {mode==="agm" && step===7 && (
+        <Step7AGMAssign
+          participants={participants}
+          roomCount={roomCount}
+          roomNames={roomNames}
+          onRoomSelect={selectAgmRoom}
+          onTeamSelect={selectAgmTeam}
+          onAutoAssignAGM={autoAssignAgm}
+          onClearAGM={clearAgm}
+          onPrev={()=>setStep(4)}
+          onNext={()=>setStep(8)}
+        />
+      )}
+      {mode==="agm" && step===8 && (
+        <Step8AGMResult
+          assigned={agmAssigned}
+          roomNames={roomNames}
+          scores={scores}
+          onPrev={()=>setStep(7)}
+          onDone={finish}
+        />
+      )}
     </div>
   );
 }
