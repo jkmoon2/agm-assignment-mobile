@@ -106,7 +106,7 @@
   border-radius: 4px;
 }
 
-/* 3단계 업로드 방식 */
+/* 3단계 업로드 방식 선택 */
 .upload-type-btns {
   display: flex;
   gap: 8px;
@@ -127,31 +127,21 @@
 }
 
 /* 4단계 엑셀 헤더 */
-/* 기본 flex 컨테이너, justify-content 는 아래 auto/manual 에서 제어 */
 .excel-header {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
+  gap: 8px;
   padding-bottom: 4px;
   border-bottom: 1px solid #ddd;
   margin-bottom: 4px;
-  background: #fff;
-}
-
-/* 자동 업로드 모드: 버튼 왼쪽, 총 슬롯 오른쪽 */
-.excel-header.auto {
   justify-content: space-between;
 }
-
-/* 수동 입력 모드: 총 슬롯만 오른쪽 정렬 */
-.excel-header.manual {
-  justify-content: flex-end;
-}
-
 .excel-header input[type="file"] {
-  flex-shrink: 0;
+  flex: 0 1 auto;      /* 화면이 좁아지면 축소 가능 */
+  max-width: 60%;      /* 너무 커지지 않도록 제한 */
   padding: 4px;
 }
-
 .excel-header .total {
   font-size: 14px;
   white-space: nowrap;
@@ -186,10 +176,10 @@
   align-items: center;
   justify-content: center;
 }
-.cell.group   { flex: 0 0 50px; }
-.cell.nickname{ flex: 1; }
-.cell.handicap{ flex: 0 0 60px; }
-.cell.delete  { flex: 0 0 40px; }
+.cell.group { flex: 0 0 50px; }
+.cell.nickname { flex: 1; }
+.cell.handicap { flex: 0 0 60px; }
+.cell.delete { flex: 0 0 40px; }
 
 /* 입력 박스 */
 .participant-row select,
