@@ -2,26 +2,12 @@ import React, { useState } from "react";
 import "../App.css";
 
 export default function Step7AGMAssign({
-  participants, roomCount, roomNames,
-  onRoomSelect, onTeamSelect,
-  onAutoAssignAGM, onClearAGM,
-  onPrev, onNext
+  participants, roomCount, roomNames, assigned,
+  onRoomSelect, onTeamSelect, onAutoAssignAGM,
+  onClearAGM, onPrev, onNext
 }) {
-  const [loadingIdx, setLoadingIdx] = useState(null);
-  const [clicked, setClicked] = useState({});
-
-  const handleRoom = async (i) => {
-    setLoadingIdx(i);
-    await onRoomSelect(i);
-    setClicked(c=>({ ...c, [i]:{ ...(c[i]||{}), room:true }}));
-    setLoadingIdx(null);
-  };
-  const handleTeam = async (i) => {
-    setLoadingIdx(i);
-    await onTeamSelect(i);
-    setClicked(c=>({ ...c, [i]:{ ...(c[i]||{}), team:true }}));
-    setLoadingIdx(null);
-  };
+  const [selected, setSelected] = useState({});
+  const toggle = i => setSelected(s => ({ ...s, [i]: !s[i] }));
 
   return (
     <>
@@ -31,35 +17,34 @@ export default function Step7AGMAssign({
       <div className="step-body">
         <div className="btn-group">
           <button onClick={onAutoAssignAGM}>자동배정</button>
+          <button onClick={()=>{
+            Object.keys(selected).forEach(i=>onRoomSelect(+i));
+            setSelected({});
+          }}>방선택</button>
+          <button onClick={()=>{
+            Object.keys(selected).forEach(i=>onTeamSelect(+i));
+            setSelected({});
+          }}>팀원선택</button>
           <button onClick={onClearAGM}>초기화</button>
         </div>
-        <div className="participant-table" style={{ flex:1 }}>
+        <div className="participant-table">
+          <div className="participant-row header">
+            <div className="cell group">조</div>
+            <div className="cell nickname">닉네임</div>
+            <div className="cell handicap">G핸디</div>
+            <div className="cell delete">선택</div>
+          </div>
           {participants.map((p,i)=>(
             <div key={i} className="participant-row">
               <div className="cell group">{p.group}조</div>
               <div className="cell nickname">{p.nickname}</div>
-              <div className="cell handicap">G핸디: {p.handicap}</div>
+              <div className="cell handicap">{p.handicap}</div>
               <div className="cell delete">
-                {p.group===1 && (
-                  <>
-                    <button
-                      disabled={clicked[i]?.room}
-                      onClick={()=>handleRoom(i)}
-                    >
-                      {loadingIdx===i && !clicked[i]?.room
-                        ? "⏳"
-                        : "방 선택"}
-                    </button>
-                    <button
-                      disabled={!clicked[i]?.room || clicked[i]?.team}
-                      onClick={()=>handleTeam(i)}
-                    >
-                      {loadingIdx===i && clicked[i]?.room && !clicked[i]?.team
-                        ? "⏳"
-                        : "팀원 선택"}
-                    </button>
-                  </>
-                )}
+                <input
+                  type="checkbox"
+                  checked={!!selected[i]}
+                  onChange={()=>toggle(i)}
+                />
               </div>
             </div>
           ))}

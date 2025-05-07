@@ -1,165 +1,363 @@
 /* 전체 컨테이너 */
 .app-container {
-  max-width: 480px;
-  height: 100vh;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  background: #f5f7fa;
-  padding: 16px;
-  box-sizing: border-box;
-}
+    max-width: 480px;
+    height: 100vh;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    background: #f5f7fa;
+    padding: 16px;
+    box-sizing: border-box;
+  }
+  
+  /* 헤더 */
+  .step-header {
+    flex: 0 0 auto;
+    margin-bottom: 8px;
+  }
+  .step-header h3 {
+    font-size: 18px;
+    text-align: center;
+    margin: 0;
+  }
+  
+  /* 본문 (헤더 고정, 본문만 스크롤) */
+  .step-body {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #fff;
+    padding: 8px;
+    border-radius: 4px;
+  }
+  
+  /* 1,3,5,7단계 버튼 그룹 */
+  .btn-group {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .btn-group button {
+    flex: 1;
+    padding: 8px;
+    font-size: 14px;
+    background: #fff;
+    border: 1px solid #ccc;
+    cursor: pointer;
+  }
+  .btn-group button.active {
+    background: #007bff;
+    color: #fff;
+    border-color: #007bff;
+  }
+  
+  /* 대회명 입력 */
+  .full-width-input {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  .full-width-input:focus {
+    outline: none;
+    border: 2px solid #007bff;
+  }
+  
+  /* 2단계 방 개수 선택 */
+  .room-count-selector {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .room-count-selector button {
+    flex: 1;
+    padding: 6px 0;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    background: #fff;
+    cursor: pointer;
+  }
+  .room-count-selector button.active {
+    background: #007bff;
+    color: #fff;
+    border-color: #007bff;
+  }
+  
+  /* 2단계 방 이름 입력 */
+  .room-names {
+    margin-bottom: 12px;
+  }
+  .room-name-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .room-name-row label {
+    width: 50px;
+  }
+  .room-name-row input {
+    flex: 1;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* 3단계 업로드 방식 선택 */
+  .upload-type-btns {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .upload-type-btns button {
+    flex: 1;
+    padding: 8px;
+    font-size: 14px;
+    background: #fff;
+    border: 1px solid #ccc;
+    cursor: pointer;
+  }
+  .upload-type-btns button.active {
+    background: #007bff;
+    color: #fff;
+    border-color: #007bff;
+  }
+  
+  /* 4단계 엑셀 헤더 */
+  .excel-header {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 4px;
+    justify-content: space-between;
+  }
+  .excel-header input[type="file"] {
+    flex: 0 1 auto;      /* 화면이 좁아지면 축소 가능 */
+    max-width: 60%;      /* 너무 커지지 않도록 제한 */
+    padding: 4px;
+  }
+  .excel-header .total {
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  
+  /* 참가자 테이블 */
+  .participant-table {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 12px;
+  }
+  
+  /* 각 행 */
+  .participant-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    border-bottom: 1px solid #eee;
+  }
+  .participant-row.header {
+    background: #fafafa;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  
+  /* 셀 너비 */
+  .cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .cell.group { flex: 0 0 50px; }
+  .cell.nickname { flex: 1; }
+  .cell.handicap { flex: 0 0 60px; }
+  .cell.delete { flex: 0 0 40px; }
+  
+  /* 입력 박스 */
+  .participant-row select,
+  .participant-row input[type="text"],
+  .participant-row input[type="number"] {
+    width: 100%;
+    padding: 4px;
+    font-size: 14px;
+    text-align: center;
+  }
+  
+  /* 푸터 */
+  .step-footer {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .step-footer button {
+    flex: 1;
+    padding: 8px 0;
+    font-size: 14px;
+    background: #fff;
+    border: 1px solid #ccc;
+    cursor: pointer;
+  }
+  .step-footer button:disabled {
+    background: #eee;
+    cursor: not-allowed;
+  }
+  
+  /* 결과표 TABLE */
+  .result-table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  .result-table th,
+  .result-table td {
+    border: 1px solid #ccc;
+    padding: 6px;
+    text-align: center;
+  }
 
-/* 헤더 */
-.step-header {
-  flex: 0 0 auto;
+  /* 전체 컨테이너 */
+.app-container {
+    max-width: 480px;
+    height: 100vh;
+    margin: 0 auto;
+    padding: 16px;
+    background: #f5f7fa;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* 헤더 고정 */
+  .step-header {
+    flex: 0 0 auto;
+    margin-bottom: 8px;
+  }
+  .step-header h3 {
+    font-size: 18px;
+    text-align: center;
+    margin: 0;
+  }
+  
+  /* 본문: 헤더/푸터 외 스크롤 영역 */
+  .step-body {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  /* 리스트(참가자/표/스코어)만 세로 스크롤 */
+  .participant-table,
+  .result-wrapper,
+  .score-table-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  
+  /* excel-header 고정 */
+  .excel-header {
+    flex: 0 0 auto;
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 2;
+  }
+  
+  /* 푸터 고정 */
+  .step-footer {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .step-footer button {
+    flex: 1;
+    padding: 8px 0;
+    font-size: 14px;
+    background: #fff;
+    border: 1px solid #ccc;
+    cursor: pointer;
+  }
+  
+  /* 좌/우 스크롤이 필요한 표 감싸기 */
+  .result-wrapper {
+    display: flex;
+    overflow-x: auto;
+  }
+  .score-table-wrapper {
+    display: flex;
+    overflow-x: auto;
+  }
+  
+  /* 테이블 기본 */
+  .result-wrapper table,
+  .score-table-wrapper table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 300px;
+  }
+  .result-wrapper th,
+  .result-wrapper td,
+  .score-table-wrapper th,
+  .score-table-wrapper td {
+    border: 1px solid #ccc;
+    padding: 6px;
+    text-align: center;
+  }
+
+  /* ——— 버튼 바 ——— */
+.btn-bar {
+  display: flex;
+  gap: 8px;
   margin-bottom: 8px;
 }
-.step-header h3 {
-  font-size: 18px;
-  text-align: center;
-  margin: 0;
+.btn-bar .link-btn {
+  flex: 1;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 8px 0;
+  cursor: pointer;
+}
+.btn-bar .action-btn {
+  flex: 2;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 0;
+  cursor: pointer;
 }
 
-/* 본문 (헤더 고정, 본문만 스크롤) */
+/* 헤더/푸터 고정, 본문만 스크롤 */
+.step-header, .step-footer {
+  flex: 0 0 auto;
+}
 .step-body {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: #fff;
-  padding: 8px;
-  border-radius: 4px;
 }
 
-/* 1,3,5,7단계 버튼 그룹 */
-.btn-group {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-.btn-group button {
-  flex: 1;
-  padding: 8px;
-  font-size: 14px;
-  background: #fff;
-  border: 1px solid #ccc;
-  cursor: pointer;
-}
-.btn-group button.active {
-  background: #007bff;
-  color: #fff;
-  border-color: #007bff;
-}
-
-/* 대회명 입력 */
-.full-width-input {
-  width: 100%;
-  padding: 8px;
-  font-size: 14px;
-  margin-bottom: 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-.full-width-input:focus {
-  outline: none;
-  border: 2px solid #007bff;
-}
-
-/* 2단계 방 개수 선택 */
-.room-count-selector {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-.room-count-selector button {
-  flex: 1;
-  padding: 6px 0;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  background: #fff;
-  cursor: pointer;
-}
-.room-count-selector button.active {
-  background: #007bff;
-  color: #fff;
-  border-color: #007bff;
-}
-
-/* 2단계 방 이름 입력 */
-.room-names {
-  margin-bottom: 12px;
-}
-.room-name-row {
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
-}
-.room-name-row label {
-  width: 50px;
-}
-.room-name-row input {
-  flex: 1;
-  padding: 6px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-/* 3단계 업로드 방식 선택 */
-.upload-type-btns {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-.upload-type-btns button {
-  flex: 1;
-  padding: 8px;
-  font-size: 14px;
-  background: #fff;
-  border: 1px solid #ccc;
-  cursor: pointer;
-}
-.upload-type-btns button.active {
-  background: #007bff;
-  color: #fff;
-  border-color: #007bff;
-}
-
-/* 4단계 엑셀 헤더 */
-.excel-header {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding-bottom: 4px;
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 4px;
-  justify-content: space-between;
-}
-.excel-header input[type="file"] {
-  flex: 0 1 auto;      /* 화면이 좁아지면 축소 가능 */
-  max-width: 60%;      /* 너무 커지지 않도록 제한 */
-  padding: 4px;
-}
-.excel-header .total {
-  font-size: 14px;
-  white-space: nowrap;
-}
-
-/* 참가자 테이블 */
+/* 리스트 영역만 스크롤 */
 .participant-table {
   flex: 1;
   overflow-y: auto;
-  margin-bottom: 12px;
 }
 
-/* 각 행 */
+/* 행 & 셀 구조 (5개 칼럼) */
 .participant-row {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 4px 0;
   border-bottom: 1px solid #eee;
 }
 .participant-row.header {
@@ -169,56 +367,332 @@
   top: 0;
   z-index: 1;
 }
-
-/* 셀 너비 */
 .cell {
+  padding: 8px;
+  text-align: center;
+  white-space: nowrap;
+}
+.cell.group    { flex: 0 0 60px; }
+.cell.nickname { flex: 1;     }
+.cell.handicap { flex: 0 0 60px; }
+.cell.manual   { flex: 0 0 80px; }
+.cell.force    { flex: 0 0 80px; }
+
+/* 수동/강제 버튼 스타일 */
+.cell.manual button,
+.cell.force button {
+  width: 100%;
+  padding: 4px 0;
+  font-size: 14px;
+}
+
+/* 강제 선택 드롭다운 */
+.cell.force select {
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+/* ——— 본문 & 리스트 고정/스크롤 ——— */
+.step-header, .step-footer {
+  flex: 0 0 auto;
+}
+.step-body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+/* 참가자/표 전용 스크롤 */
+.participant-table,
+.score-table-wrapper {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* ——— Step5 헤더 컬럼 스타일 ——— */
+.participant-row {
   display: flex;
   align-items: center;
-  justify-content: center;
+  border-bottom: 1px solid #eee;
 }
-.cell.group { flex: 0 0 50px; }
-.cell.nickname { flex: 1; }
-.cell.handicap { flex: 0 0 60px; }
-.cell.delete { flex: 0 0 40px; }
-
-/* 입력 박스 */
-.participant-row select,
-.participant-row input[type="text"],
-.participant-row input[type="number"] {
-  width: 100%;
-  padding: 4px;
-  font-size: 14px;
+.participant-row.header {
+  background: #fafafa;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.cell {
+  padding: 8px;
   text-align: center;
 }
+.cell.group    { flex: 0 0 60px; }
+.cell.nickname { flex: 1;     }
+.cell.handicap { flex: 0 0 60px; }
+.cell.manual   { flex: 0 0 60px; }
+.cell.force    { flex: 0 0 60px; }
+/* 수동/강제 버튼 크기만 남기고 텍스트 제거 */
+.cell.manual button,
+.cell.force button {
+  width: 100%;
+  height: 28px;
+  background: #ddd;
+  border: 1px solid #ccc;
+}
 
-/* 푸터 */
-.step-footer {
-  flex: 0 0 auto;
+/* ——— 이전-자동배정-초기화-다음 버튼 (바텀 바) ——— */
+.btn-bar-bottom {
   display: flex;
   gap: 8px;
-  margin-top: 8px;
+  margin: 8px 0 0;
 }
-.step-footer button {
+.btn-bar-bottom button {
   flex: 1;
   padding: 8px 0;
-  font-size: 14px;
-  background: #fff;
-  border: 1px solid #ccc;
+  background: #007bff;
+  color: #fff;
+  border: none;
   cursor: pointer;
 }
-.step-footer button:disabled {
-  background: #eee;
-  cursor: not-allowed;
+.btn-bar-bottom button:first-child,
+.btn-bar-bottom button:last-child {
+  background: #fff;
+  color: #000;
+  border: 1px solid #ccc;
 }
 
-/* 결과표 TABLE */
+/* ——— Step5.5 스코어 입력 ——— */
+.room-score-block {
+  margin-bottom: 8px;
+}
+.room-title {
+  margin: 4px 0;
+  font-size: 16px;
+}
+.result-wrapper {
+  overflow-x: auto;
+}
 .result-table {
-  border-collapse: collapse;
   width: 100%;
+  border-collapse: collapse;
 }
 .result-table th,
 .result-table td {
   border: 1px solid #ccc;
   padding: 6px;
   text-align: center;
+}
+.th-colored {
+  background: #f0f0f0;
+}
+
+/* — 전체 컨테이너 & 고정 헤더·푸터 — */
+.step-header, .step-footer {
+  flex: 0 0 auto;
+}
+.step-body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* — 리스트 전용 스크롤 — */
+.participant-table,
+.score-table-wrapper {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* — Step5 컬럼 & 셀 — */
+.participant-row {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+}
+.participant-row.header {
+  background: #fafafa;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.cell {
+  padding: 8px;
+  text-align: center;
+  white-space: nowrap;
+}
+.cell.group    { flex: 0 0 40px; }
+.cell.nickname { flex: 1;     }
+.cell.handicap { flex: 0 0 60px; }
+.cell.manual   { flex: 0 0 60px; }
+.cell.force    { flex: 0 0 60px; }
+/* 버튼만 보이도록 텍스트 제거 */
+.cell.manual button,
+.cell.force button {
+  width: 100%;
+  height: 28px;
+  background: #ddd;
+  border: 1px solid #ccc;
+}
+
+/* — 이전·자동·초기화·다음 버튼 바텀 — */
+.btn-bar-bottom {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.btn-bar-bottom button {
+  flex: 1;
+  padding: 8px 0;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+.btn-bar-bottom button:first-child,
+.btn-bar-bottom button:last-child {
+  background: #fff;
+  color: #000;
+  border: 1px solid #ccc;
+}
+
+/* — Step5.5 스코어 표 — */
+.room-score-block {
+  margin-bottom: 8px;
+}
+.room-title {
+  margin: 4px 0;
+  font-size: 16px;
+}
+.result-wrapper {
+  overflow-x: auto;
+}
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.result-table th,
+.result-table td {
+  border: 1px solid #ccc;
+  padding: 6px;
+  text-align: center;
+}
+/* 컬럼별 폭 지정 */
+.nickname-col { width: 70%; }
+.score-col    { width: 30%; }
+/* 헤더 배경색 */
+.th-colored {
+  background: #f0f0f0;
+}
+
+/* ─── 제목 라인 조정 ─── */
+.step-header {
+  flex: 0 0 auto;
+  margin-bottom: 4px;
+}
+.step-header h3 {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0;
+  padding: 12px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+/* ─── 본문 & 리스트 스크롤 ─── */
+.step-body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.participant-table,
+.score-table-wrapper {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* ─── 컬럼 & 셀 간격 조정 ─── */
+.participant-row {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  height: 40px;        /* 행 높이 축소 */
+}
+.participant-row.header {
+  background: #fafafa;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  border-bottom: 1px solid #ccc;  /* 타이틀 라인 얇게 */
+}
+.cell {
+  padding: 4px 8px;       /* 세로 간격 축소 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cell.group    { flex: 0 0 40px; }
+.cell.nickname { flex: 1; }
+.cell.handicap { flex: 0 0 60px; }
+.cell.manual   { flex: 0 0 60px; }
+.cell.force    { flex: 0 0 60px; }
+
+/* 버튼 스타일 */
+.cell.manual button,
+.cell.force button {
+  width: 100%;
+  height: 28px;
+  font-size: 12px;
+}
+
+/* ─── 하단 버튼 바 ─── */
+.btn-bar-bottom {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+}
+.btn-bar-bottom .nav-btn {
+  flex: 1;
+  background: #fff;
+  color: #000;
+  border: 1px solid #ccc;
+}
+.btn-bar-bottom .action-btn {
+  flex: 1;
+  background: #007bff;
+  color: #fff;
+  border: none;
+}
+.btn-bar-bottom button {
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+/* ─── 5.5 스코어 입력 표 ─── */
+.room-score-block {
+  margin-bottom: 8px;
+}
+.room-title {
+  margin: 4px 0;
+  font-size: 16px;
+}
+.score-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.score-table th,
+.score-table td {
+  border: 1px solid #ccc;
+  padding: 4px 8px;
+  text-align: center;
+  vertical-align: middle;
+}
+/* 닉네임 폭 넓혀, 스코어 폭 좁혀 */
+.nickname-col { width: 70%; }
+.score-col    { width: 30%; }
+/* 헤더 배경 */
+.th-colored {
+  background: #f0f0f0;
 }

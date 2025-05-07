@@ -15,12 +15,12 @@ export default function Step1ModeTitle({
       <div className="step-body">
         <div className="btn-group">
           <button
-            className={mode === "stroke" ? "active" : ""}
-            onClick={() => setMode("stroke")}
+            className={mode==="stroke"?"active":""}
+            onClick={()=>setMode("stroke")}
           >스트로크 모드</button>
           <button
-            className={mode === "agm" ? "active" : ""}
-            onClick={() => setMode("agm")}
+            className={mode==="agm"?"active":""}
+            onClick={()=>setMode("agm")}
           >AGM 포볼 모드</button>
         </div>
         <input
@@ -28,13 +28,13 @@ export default function Step1ModeTitle({
           className="full-width-input"
           placeholder="대회 제목을 입력하세요"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={e=>setTitle(e.target.value)}
         />
       </div>
       <div className="step-footer">
         <button
-          onClick={() => setStep(2)}
           disabled={!canNext}
+          onClick={()=>setStep(2)}
         >다음 →</button>
       </div>
     </>
