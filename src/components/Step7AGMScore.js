@@ -1,7 +1,7 @@
 import React from "react";
 import "../App.css";
 
-export default function Step7_5AGMScoreInput({
+export default function Step7AGMScore({
   assigned, scores, onScoreChange, onPrev, onNext
 }) {
   return (

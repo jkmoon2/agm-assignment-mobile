@@ -8,10 +8,10 @@ import Step2RoomSetup      from "./components/Step2RoomSetup";
 import Step3UploadType     from "./components/Step3UploadType";
 import Step4Participant    from "./components/Step4Participant";
 import Step5StrokeAssign   from "./components/Step5StrokeAssign";
-import Step5_5StrokeScore  from "./components/Step5_5StrokeScoreInput";
+import Step5_5StrokeScore  from "./components/Step5StrokeScore";
 import Step6StrokeResult   from "./components/Step6StrokeResult";
 import Step7AGMAssign      from "./components/Step7AGMAssign";
-import Step7_5AGMScore     from "./components/Step7_5AGMScoreInput";
+import Step7_5AGMScore     from "./components/Step7AGMScore";
 import Step8AGMResult      from "./components/Step8AGMResult";
 
 import { shuffle, sleep } from "./utils";

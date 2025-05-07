@@ -1,7 +1,7 @@
 import React from "react";
 import "../App.css";
 
-export default function Step5_5StrokeScoreInput({
+export default function Step5StrokeScore({
   assigned,
   scores,
   onScoreChange,
