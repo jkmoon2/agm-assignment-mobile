@@ -8,10 +8,10 @@ import Step2RoomSetup      from "./components/Step2RoomSetup";
 import Step3UploadType     from "./components/Step3UploadType";
 import Step4Participant    from "./components/Step4Participant";
 import Step5StrokeAssign   from "./components/Step5StrokeAssign";
-import Step5_5StrokeScore  from "./components/Step5StrokeScore";
+import Step5StrokeScore    from "./components/Step5StrokeScore";
 import Step6StrokeResult   from "./components/Step6StrokeResult";
 import Step7AGMAssign      from "./components/Step7AGMAssign";
-import Step7_5AGMScore     from "./components/Step7AGMScore";
+import Step7AGMScore       from "./components/Step7AGMScore";
 import Step8AGMResult      from "./components/Step8AGMResult";
 
 import { shuffle, sleep } from "./utils";
@@ -302,7 +302,7 @@ function App() {
 
       {/* Step5.5 */}
       {mode === "stroke" && step === 5.5 && (
-        <Step5_5StrokeScore
+        <Step5StrokeScore
           assigned={strokeAssigned}
           scores={scores}
           onScoreChange={(name, val) =>
@@ -342,7 +342,7 @@ function App() {
 
       {/* Step7.5 */}
       {mode === "agm" && step === 7.5 && (
-        <Step7_5AGMScore
+        <Step7AGMScore
           assigned={agmAssigned}
           scores={scores}
           onScoreChange={(name, val) =>
